@@ -1,10 +1,15 @@
 import axios from "axios"
 import { Response, Request } from "express"
+import { ArtistQueryParams, IArtist } from "../types/artist"
+import { mapToCSV, writeFile } from "../utils"
 
 export default class ArtistController implements ArtistController {
-  async getArtistsByName(req: Request, res: Response) {
+  async getArtistsByName(
+    req: Request<any, any, any, ArtistQueryParams>,
+    res: Response
+  ) {
     try {
-      const { name } = req.query
+      const { name, filename } = req.query
       if (!name) {
         return res.status(401).json({
           success: false,
@@ -14,12 +19,18 @@ export default class ArtistController implements ArtistController {
       }
 
       let URL = `https://ws.audioscrobbler.com/2.0/?method=artist.search&artist=${name}&api_key=daddd748c6487fea986fbe85f513c45f&format=json`
-      const data: any = await axios.get(URL)
+      const { data } = await axios.get<IArtist>(URL)
+      const artists = data.results.artistmatches.artist
+      if (filename) {
+        const csvData = artists.map((artist) => mapToCSV(artist))
+
+        writeFile(filename, csvData)
+      }
 
       return res.status(200).json({
         success: true,
         statusCode: 200,
-        data: data.data?.results?.artistmatches,
+        data: artists,
       })
     } catch (error) {
       console.log(error)
