@@ -13,6 +13,10 @@ RUN npm install
 # Copy the rest of the application code
 COPY . .
 
+# Getting the port variable from env file
+
+ENV PORT=5000
+
 # Expose the port your app is running on
 EXPOSE 5000
 
