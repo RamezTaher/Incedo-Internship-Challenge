@@ -3,7 +3,10 @@ import fs from "fs"
 import path from "path"
 import { IArtistCSV } from "../types/artist"
 
-export async function writeFile(filename: string, data: IArtistCSV[]) {
+export async function writeFile(
+  filename: string,
+  data: IArtistCSV[]
+): Promise<boolean> {
   const logDirectory = path.join(__dirname, "../../out/")
   fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory)
   const csvWriter = createObjectCsvWriter({
@@ -18,7 +21,9 @@ export async function writeFile(filename: string, data: IArtistCSV[]) {
   })
   try {
     await csvWriter.writeRecords(data)
+    return true
   } catch (error) {
     console.log(error)
+    return false
   }
 }

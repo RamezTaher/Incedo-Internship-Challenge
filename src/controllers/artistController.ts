@@ -11,20 +11,26 @@ export default class ArtistController implements ArtistController {
     try {
       const { name, filename } = req.query
       if (!name) {
-        return res.status(401).json({
+        return res.status(400).json({
           success: false,
-          statusCode: 401,
+          statusCode: 400,
           message: "please enter a name",
         })
       }
 
-      let URL = `https://ws.audioscrobbler.com/2.0/?method=artist.search&artist=${name}&api_key=daddd748c6487fea986fbe85f513c45f&format=json`
+      const URL = `https://ws.audioscrobbler.com/2.0/?method=artist.search&artist=${name}&api_key=daddd748c6487fea986fbe85f513c45f&format=json`
       const { data } = await axios.get<IArtist>(URL)
       const artists = data.results.artistmatches.artist
       if (filename) {
         const csvData = artists.map((artist) => mapToCSV(artist))
 
-        writeFile(filename, csvData)
+        const fileWritten = await writeFile(filename, csvData)
+        if (!fileWritten)
+          return res.status(400).json({
+            success: false,
+            statusCode: 400,
+            message: "Something Wrong happened while saving file",
+          })
       }
 
       return res.status(200).json({

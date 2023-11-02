@@ -10,7 +10,7 @@ export type IArtist = {
 
 export type IArtistCSV = {
   name: string
-  mbid: string
+  mbid?: string
   image_small: string
   image: string
   url: string
