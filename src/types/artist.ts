@@ -18,5 +18,5 @@ export type IArtistCSV = {
 
 export type ArtistQueryParams = {
   name: string
-  filename?: string
+  filename: string
 }

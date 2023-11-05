@@ -3,6 +3,7 @@ import { IArtistCSV } from "../../src/types/artist"
 export const artistMock: IArtistCSV[] = [
   {
     name: "Anne-Marie",
+    mbid: "",
     image_small:
       "https://lastfm.freetls.fastly.net/i/u/34s/2a96cbd8b46e442fc41c2b86b821562f.png",
     image:

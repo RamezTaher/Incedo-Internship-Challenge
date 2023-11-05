@@ -12,11 +12,11 @@ export async function writeFile(
   const csvWriter = createObjectCsvWriter({
     path: path.join(logDirectory, `${filename}.csv`),
     header: [
-      { id: "name", title: "Name" },
-      { id: "mbid", title: "Mbid" },
-      { id: "image_small", title: "Image_small" },
-      { id: "image", title: "Image" },
-      { id: "url", title: "Url" },
+      { id: "name", title: "name" },
+      { id: "mbid", title: "mbid" },
+      { id: "image_small", title: "image_small" },
+      { id: "image", title: "image" },
+      { id: "url", title: "url" },
     ],
   })
   try {
