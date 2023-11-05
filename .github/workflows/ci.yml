@@ -18,7 +18,7 @@ jobs:
         run: cp .env.example .env
 
       - name: Create tests .env
-        run: cp tests/.env.test.example tests/.env.test
+        run: cp __tests__/.env.test.example __tests__/.env.test
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
