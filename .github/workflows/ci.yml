@@ -1,0 +1,38 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Create .env
+        run: cp .env.example .env
+
+      - name: Create tests .env
+        run: cp tests/.env.test.example tests/.env.test
+
+      - name: Set up Docker
+        uses: docker/setup-action@v2
+        with:
+          dockerfile: Dockerfile
+          context: .
+
+      - name: Build docker images
+        run: docker build -t ramez-app .
+
+      - name: Run docker images
+        run: docker run -d -p 5000:5000 --name=ramez-app ramez-app
+
+      - name: Clean up
+        run: docker stop ramez-app || true
+          docker rm ramez-app || true
+          docker rmi ramez-app || true
