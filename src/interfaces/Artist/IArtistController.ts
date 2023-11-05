@@ -1,5 +1,9 @@
-import { Artist } from "../../models/Artist"
+import { Response, Request } from "express"
+import { ArtistQueryParams } from "../../types/artist"
 
 export interface IArtistController {
-  getArtistsByName(name: string): Artist[]
+  getArtistsByName(
+    req: Request<any, any, any, ArtistQueryParams>,
+    res: Response
+  ): void
 }
