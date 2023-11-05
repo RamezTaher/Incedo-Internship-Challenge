@@ -1,41 +1,42 @@
-# compiled output
-/dist
-/node_modules
-/out
+# Add any directories, files, or patterns you don't want to be tracked by version control
+.idea
 
-# Logs
+# ignore vs code project config files
+.vs
+
+# ignore logs
 logs
 *.log
-npm-debug.log*
-pnpm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-lerna-debug.log*
 
-# OS
+# ignore 3rd party lib
+node_modules
+
+# ignore key
+*.pem
+
+# Ignore built files
+build
+
+# ignore test converage
+coverage
+
+# Environment varibles
+*.env
+*.env.test
+*.env.production
+*.env.development
+*.env copy
+
+#keys
+keys/*
+!keys/*.md
+!keys/*.example
+
+#temp
+temp
 .DS_Store
 
-# Tests
-/coverage
-/.nyc_output
+*.save
+*.save.*
 
-# IDEs and editors
-/.idea
-.project
-.classpath
-.c9/
-*.launch
-.settings/
-*.sublime-workspace
-
-# IDE - VSCode
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-
-.data
-/files
-.env*
-/ormconfig.json
+node_modules

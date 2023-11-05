@@ -1,7 +1,8 @@
 import axios from "axios"
 import { Response, Request } from "express"
 import { ArtistQueryParams, IArtist } from "../types/artist"
-import { mapToCSV, writeFile } from "../utils"
+import { getRandomArtists, mapToCSV, writeFile } from "../utils"
+import { BASE_URL } from "../config"
 
 export default class ArtistController implements ArtistController {
   async getArtistsByName(
@@ -14,36 +15,46 @@ export default class ArtistController implements ArtistController {
         return res.status(400).json({
           success: false,
           statusCode: 400,
-          message: "please enter a name",
+          message: "missing query params (name)",
         })
       }
 
-      const URL = `https://ws.audioscrobbler.com/2.0/?method=artist.search&artist=${name}&api_key=daddd748c6487fea986fbe85f513c45f&format=json`
-      const { data } = await axios.get<IArtist>(URL)
-      const artists = data.results.artistmatches.artist
-      if (filename) {
-        const csvData = artists.map((artist) => mapToCSV(artist))
-
-        const fileWritten = await writeFile(filename, csvData)
-        if (!fileWritten)
-          return res.status(400).json({
-            success: false,
-            statusCode: 400,
-            message: "Something Wrong happened while saving file",
-          })
+      if (!filename) {
+        return res.status(400).json({
+          success: false,
+          statusCode: 400,
+          message: "missing query params (filename)",
+        })
       }
 
-      return res.status(200).json({
-        success: true,
-        statusCode: 200,
-        data: artists,
-      })
+      const API_URL = `${BASE_URL}&artist=${name}`
+
+      const { data } = await axios.get<IArtist>(API_URL)
+      let artists = data.results.artistmatches.artist
+      if (artists.length === 0) {
+        artists = await getRandomArtists()
+        return res
+          .status(200)
+          .json({ success: true, statusCode: 200, data: artists })
+      } else {
+        const csvData = artists.map((artist) => mapToCSV(artist))
+        const fileWritten = await writeFile(filename, csvData)
+        if (!fileWritten)
+          return res.status(500).json({
+            success: false,
+            statusCode: 500,
+            message: "Something gone wrong when saving data to csv",
+          })
+        return res
+          .status(201)
+          .json({ success: true, statusCode: 201, data: artists })
+      }
     } catch (error) {
       console.log(error)
       res.status(500).json({
         success: false,
         statusCode: 500,
-        message: "error",
+        message: "Server Internal Error",
       })
     }
   }
