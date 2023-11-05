@@ -32,7 +32,7 @@ describe("Artists endpoints", () => {
   })
   it("request with correct params and valid artist name should return an array of artists data and write CSV file", async () => {
     const response = await request(app).get(
-      "/api/artists?name=eminem&filename=testfile"
+      "/api/artists?name=anna-merie&filename=testfile"
     )
     const outDirectory = path.join(__dirname, "./../out/testfile.csv")
     expect(response.statusCode).toEqual(201)
